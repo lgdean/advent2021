@@ -1,0 +1,5 @@
+advent2021.cabal
+.stack-work/
+*~
+.idea/
+*.iml
