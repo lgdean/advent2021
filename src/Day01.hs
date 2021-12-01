@@ -18,10 +18,7 @@ doPart1 input =
 
 countTripleIncreases :: [Int] -> Int
 countTripleIncreases input =
-  let triples = zip3 input (tail input) (tail $ tail input)
-      sums = zipWith (+) input (tail input)
-      actualSums = zipWith (+) sums (tail $ tail input)
-  in countIncreases actualSums
+  length $ filter id $ zipWith (>) ((tail . tail . tail) input) input
 
 doPart2 :: [Char] -> Int
 doPart2 input =
