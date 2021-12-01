@@ -13,7 +13,7 @@ countIncreases input =
 
 doPart1 :: [Char] -> Int
 doPart1 input =
-  let inputInts = map read $ lines input
+  let inputInts = readIntLines input
   in countIncreases inputInts
 
 countTripleIncreases :: [Int] -> Int
@@ -22,5 +22,8 @@ countTripleIncreases input =
 
 doPart2 :: [Char] -> Int
 doPart2 input =
-  let inputInts = map read $ lines input
+  let inputInts = readIntLines input
   in countTripleIncreases inputInts
+
+readIntLines :: [Char] -> [Int]
+readIntLines = map read . lines
