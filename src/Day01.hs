@@ -7,6 +7,8 @@ module Day01
 
 import Debug.Trace (trace)
 
+import Lib
+
 countIncreases :: [Int] -> Int
 countIncreases input =
   length $ filter id $ zipWith (>) (tail input) input
@@ -24,6 +26,3 @@ doPart2 :: [Char] -> Int
 doPart2 input =
   let inputInts = readIntLines input
   in countTripleIncreases inputInts
-
-readIntLines :: [Char] -> [Int]
-readIntLines = map read . lines
