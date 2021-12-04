@@ -31,4 +31,4 @@ spec = do
 
     it "can solve Part 2" $ do
       input <- readFile "day02-input"
-      doPart2 input `shouldBe` 0
+      doPart2 input `shouldBe` 2138382217
