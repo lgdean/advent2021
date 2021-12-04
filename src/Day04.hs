@@ -56,7 +56,7 @@ doPart1 :: [Int] -> [Char] -> Int
 doPart1 nums input = calcScore $ playGame nums $ parseBoardList input
 
 pickLastWinner :: [Int] -> [Board] -> (Int, Board)
-pickLastWinner [] _ = error "other guard should catch this case before we recurse here"
+pickLastWinner [] _ = error "ran out of numbers called! bad assumption, need to solve differently."
 pickLastWinner (curr:rest) boards =
   let nextState = map (callNumber curr) boards
       (winners, losers) = partition winning nextState
