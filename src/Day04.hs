@@ -1,7 +1,7 @@
 module Day04
     (
       winning,
---      doPart2,
+      doPart2,
       doPart1
     ) where
 
@@ -53,6 +53,20 @@ calcScore (n, board) = n * sumUnmarked board
 
 doPart1 :: [Int] -> [Char] -> Int
 doPart1 nums input = calcScore $ playGame nums $ parseBoardList input
+
+pickLastWinner :: [Int] -> [Board] -> (Int, Board)
+pickLastWinner [] _ = error "other guard should catch this case before we recurse here"
+pickLastWinner (curr:rest) boards =
+  let nextState = map (callNumber curr) boards
+      winners = filter winning nextState
+      losers = filter (not . winning) nextState
+  in case (winners, losers) of
+    (aWinner:_, []) -> (curr, aWinner)
+    (_        , []) -> error "oh no"
+    (_        , _)  -> pickLastWinner rest losers
+
+doPart2 :: [Int] -> [Char] -> Int
+doPart2 nums input = calcScore $ pickLastWinner nums $ parseBoardList input
 
 -- copied from internet, I assume there is an appropriate library
 transpose:: [[a]]->[[a]]
