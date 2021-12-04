@@ -5,6 +5,7 @@ module Day04
       doPart1
     ) where
 
+import Data.List (partition)
 import Data.List.Split (splitOn)
 
 import Debug.Trace (trace)
@@ -58,8 +59,7 @@ pickLastWinner :: [Int] -> [Board] -> (Int, Board)
 pickLastWinner [] _ = error "other guard should catch this case before we recurse here"
 pickLastWinner (curr:rest) boards =
   let nextState = map (callNumber curr) boards
-      winners = filter winning nextState
-      losers = filter (not . winning) nextState
+      (winners, losers) = partition winning nextState
   in case (winners, losers) of
     (aWinner:_, []) -> (curr, aWinner)
     (_        , []) -> error "oh no"
