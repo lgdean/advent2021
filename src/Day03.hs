@@ -9,7 +9,7 @@ module Day03
     ) where
 
 import Data.Char(digitToInt)
-import Data.List(groupBy, maximumBy, sort, sortBy, sortOn)
+import Data.List(groupBy, maximumBy, sort, sortBy, sortOn, transpose)
 import Data.Ord(comparing)
 
 import Debug.Trace (trace)
@@ -43,11 +43,6 @@ part1answer input =
 doPart1 :: [Char] -> Int
 doPart1 input =
   part1answer $ lines input
-
--- copied from internet, I assume there is an appropriate library
-transpose:: [[a]]->[[a]]
-transpose ([]:_) = []
-transpose x = map head x : transpose (map tail x)
 
 oxygenGeneratorRating :: [String] -> String
 oxygenGeneratorRating [] = ""

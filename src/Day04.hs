@@ -5,7 +5,7 @@ module Day04
       doPart1
     ) where
 
-import Data.List (partition)
+import Data.List (partition, transpose)
 import Data.List.Split (splitOn)
 
 import Debug.Trace (trace)
@@ -67,8 +67,3 @@ pickLastWinner (curr:rest) boards =
 
 doPart2 :: [Int] -> [Char] -> Int
 doPart2 nums input = calcScore $ pickLastWinner nums $ parseBoardList input
-
--- copied from internet, I assume there is an appropriate library
-transpose:: [[a]]->[[a]]
-transpose ([]:_) = []
-transpose x = map head x : transpose (map tail x)
