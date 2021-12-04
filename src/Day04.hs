@@ -39,17 +39,20 @@ parseBoard rows =
   let boardNum str = (False, read str :: Int)
   in map (map boardNum . words) rows
 
-playGame :: [Int] -> [Board] -> Int
+playGame :: [Int] -> [Board] -> (Int, Board)
 playGame [] _ = error "ran out of numbers called!"
 playGame (curr:rest) boards =
   let nextState = map (callNumber curr) boards
       winners = filter winning nextState
   in case winners of
-    (aWinner:_) -> curr * sumUnmarked aWinner
+    (aWinner:_) -> (curr, aWinner)
     []          -> playGame rest nextState
 
+calcScore :: (Int, Board) -> Int
+calcScore (n, board) = n * sumUnmarked board
+
 doPart1 :: [Int] -> [Char] -> Int
-doPart1 nums input = playGame nums $ parseBoardList input
+doPart1 nums input = calcScore $ playGame nums $ parseBoardList input
 
 -- copied from internet, I assume there is an appropriate library
 transpose:: [[a]]->[[a]]
