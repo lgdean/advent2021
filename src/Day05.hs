@@ -14,8 +14,8 @@ type Line = ((Int, Int), (Int, Int))
 
 allPointsInLine :: Line -> [(Int, Int)]
 allPointsInLine line@((x1,y1),(x2,y2))
-  | x1 == x2 = map (\y -> (x1,y)) [(min y1 y2) .. (max y1 y2)]
-  | y1 == y2 = map (\x -> (x,y1)) [(min x1 x2) .. (max x1 x2)]
+  | x1 == x2 = zip (repeat x1) [(min y1 y2) .. (max y1 y2)]
+  | y1 == y2 = zip [(min x1 x2) .. (max x1 x2)] (repeat y1)
   | x1 < x2 && y1 < y2 = zip [x1..x2] [y1..y2]
   | x1 < x2  = zip [x1..x2] $ reverse [y2..y1]
   | y1 < y2 = zip (reverse [x2..x1]) [y1..y2]
