@@ -13,13 +13,13 @@ import Debug.Trace (trace)
 type Line = ((Int, Int), (Int, Int))
 
 allPointsInLine :: Line -> [(Int, Int)]
-allPointsInLine ((x1,y1),(x2,y2))
-  | x1 == x2 = zip (repeat x1) (handyRange y1 y2)
-  | y1 == y2 = zip (handyRange x1 x2) (repeat y1)
+allPointsInLine (p1@(x1,y1),p2@(x2,y2))
+  | p1 == p2 = [p1] -- never happens, but it feels nice to check
   | otherwise = zip (handyRange x1 x2) (handyRange y1 y2)
 
 handyRange :: Int -> Int -> [Int]
 handyRange a b
+  | a == b    = repeat a
   | a < b     = [a..b]
   | otherwise = reverse [b..a]
 
