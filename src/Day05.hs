@@ -38,7 +38,6 @@ parsePoint str =
 doPart1 :: [Char] -> Int
 doPart1 input =
   let theLines = map parseLine $ lines input
-      thePoints = trace (show theLines) $ map allPointsInLine theLines
-      temp = trace (show thePoints) concat thePoints
-      groupedPoints = group $ sort (trace (show temp) temp)
-  in length $ filter ((>1) . length) (trace (show groupedPoints) groupedPoints)
+      thePoints = concatMap allPointsInLine theLines
+      groupedPoints = group $ sort thePoints
+  in length $ filter ((>1) . length) groupedPoints
