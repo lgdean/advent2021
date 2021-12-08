@@ -4,7 +4,6 @@ module Day08
       doPart1
     ) where
 
-import Data.List(words)
 import Data.List.Split(splitOn)
 
 import Debug.Trace (trace)
