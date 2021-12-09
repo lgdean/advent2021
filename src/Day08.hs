@@ -5,7 +5,7 @@ module Day08
       doPart1
     ) where
 
-import Data.List((\\), intersect, partition, sort)
+import Data.List((\\), partition, sort)
 import Data.List.Split(splitOn)
 
 import Debug.Trace (trace)
@@ -26,15 +26,12 @@ decodeEntry notedPatterns readout =
       eightPattern = head $ filter ((==) 7 . length) patterns
       sevenPattern = head $ filter ((==) 3 . length) patterns
       onePattern = head $ filter ((==) 2 . length) patterns
-      upperSegment = head $ sevenPattern \\ onePattern
       fourPattern = head $ filter ((==) 4 . length) patterns
       ([ninePattern], zeroAndSix) = partition (fourPattern `areAllIn`) $ filter ((==) 6 . length) patterns
       ([zeroPattern], [sixPattern]) = partition (onePattern `areAllIn`) zeroAndSix
       middleSegment = head $ eightPattern \\ zeroPattern
       upperLeftSegment = head $ fourPattern \\ (middleSegment : onePattern)
       twoThreeAndFive = filter ((==) 5 . length) patterns
-      horizontalSegments = foldl intersect eightPattern twoThreeAndFive :: [Char]
-      lowerSegment = head $ horizontalSegments \\ [upperSegment, middleSegment]
       threePattern = head $ filter (onePattern `areAllIn`) twoThreeAndFive
       ([fivePattern], [twoPattern]) = partition (upperLeftSegment `elem`) (twoThreeAndFive \\ [threePattern])
   in case sort readout of
