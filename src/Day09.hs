@@ -18,8 +18,11 @@ isLowPoint (x,y) grid =
 
 neighbors :: (Int, Int) -> Map.Map (Int, Int) a -> [a]
 neighbors (x,y) grid =
-  let coords = [ (x+a,y+b) | a <- [-1,0,1], b <- [-1,0,1], (a==0) /= (b==0) ]
+  let coords = neighborCoords (x,y)
   in concatMap (\c -> maybeToList (Map.lookup c grid)) coords
+
+neighborCoords :: (Int, Int) -> [(Int, Int)]
+neighborCoords (x,y) = [ (x+a,y+b) | a <- [-1,0,1], b <- [-1,0,1], (a==0) /= (b==0) ]
 
 doPart1 :: [Char] -> Int
 doPart1 input =
