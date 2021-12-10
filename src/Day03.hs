@@ -8,20 +8,18 @@ module Day03
       doPart1
     ) where
 
-import Data.Char(digitToInt)
 import Data.List(groupBy, maximumBy, sort, sortBy, sortOn, transpose)
 import Data.Ord(comparing)
 
 import Debug.Trace (trace)
+
+import Lib
 
 gammaRate :: [String] -> Int
 gammaRate input =
   let columns = transpose input
       gamma = map moreCommonBit columns
   in bin2Int gamma
-
-bin2Int :: String -> Int
-bin2Int str = foldl (\acc n -> acc*2+n) 0 (map digitToInt str)
 
 oppositeBit '0' = '1'
 oppositeBit '1' = '0'
