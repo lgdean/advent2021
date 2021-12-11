@@ -26,8 +26,8 @@ doPart1 input =
 
 showGrid :: Map.Map (Int, Int) Int -> String
 showGrid grid =
-  let showRow r = [intToDigit $ grid Map.! (r,x) | x <- [0..9]] ++ "\n"
-      rows = [showRow x | x <- [0..9]] -- x is a fine name for everything until I fix the parsing bug
+  let showRow r = [intToDigit $ grid Map.! (x,r) | x <- [0..9]] ++ "\n"
+      rows = [showRow y | y <- [0..9]]
   in concat rows
 
 parseGrid :: String -> Map.Map (Int, Int) Int
@@ -37,7 +37,7 @@ parseGrid input =
 
 parseRow :: Int -> String -> Map.Map (Int, Int) Int
 parseRow n row =
-  let coords = zip (repeat n) [0..]
+  let coords = zip [0..] (repeat n)
   in Map.fromList $ zip coords (map digitToInt row)
 
 neighborCoords :: (Int, Int) -> [(Int, Int)]

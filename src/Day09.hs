@@ -55,5 +55,5 @@ parseLayout input =
 
 parseRow :: Int -> String -> Map.Map (Int, Int) Int
 parseRow n row =
-  let coords = zip (repeat n) [0..]
+  let coords = zip [0..] (repeat n)
   in Map.fromList $ zip coords (map digitToInt row)
