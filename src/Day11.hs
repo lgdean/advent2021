@@ -21,8 +21,7 @@ doPart1 :: [Char] -> Int
 doPart1 input =
   let grid = parseGrid input
       startAndResults = take 101 $ iterate doStep (0, grid)
-      flashCounts = map fst startAndResults
-  in sum $ trace (showGrid grid) flashCounts
+  in sum $ map fst startAndResults
 
 showGrid :: Map.Map (Int, Int) Int -> String
 showGrid grid =
