@@ -1,10 +1,11 @@
 module Day12
     (
---      doPart2,
+      doPart2,
       doPart1
     ) where
 
 import Data.Char (toUpper)
+import Data.List (group, sort)
 import Data.List.Split (splitOn)
 import Data.Map (Map)
 import qualified Data.Map.Strict as Map
@@ -43,3 +44,21 @@ part1PathsFrom cave pathSoFar caveMap
   | isBig cave = concatMap (\x -> part1PathsFrom x (cave : pathSoFar) caveMap) (Set.toList $ caveMap Map.! cave)
   | cave `elem` pathSoFar = []
   | otherwise = concatMap (\x -> part1PathsFrom x (cave : pathSoFar) caveMap) (Set.toList $ caveMap Map.! cave)
+
+hasSmallCaveDupe :: [String] -> Bool
+hasSmallCaveDupe path = any ((>1) . length) $ group $ sort $ filter (not . isBig) path
+
+part2PathsFrom :: String -> [String] -> Map String (Set.Set String) -> [[String]]
+part2PathsFrom "end" pathSoFar _ = ["end" : pathSoFar]
+part2PathsFrom cave pathSoFar caveMap
+  | isBig cave = concatMap (\x -> part2PathsFrom x (cave : pathSoFar) caveMap) (Set.toList $ caveMap Map.! cave)
+  | cave `elem` pathSoFar && hasSmallCaveDupe pathSoFar = []
+  | otherwise = concatMap (\x -> part2PathsFrom x (cave : pathSoFar) caveMap) (Set.toList $ caveMap Map.! cave)
+
+doPart2 :: [Char] -> Int
+doPart2 input =
+  let segments = map parseSegment $ lines input
+      caveMap = buildCaveMap segments
+      restOfCaveMap = Map.insert "start" Set.empty caveMap
+      paths = concatMap (\x -> part2PathsFrom x ["start"] restOfCaveMap) (caveMap Map.! "start") -- TODO works?
+  in length paths
