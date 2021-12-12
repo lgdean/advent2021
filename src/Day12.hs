@@ -42,7 +42,7 @@ part1PathsFrom :: String -> [String] -> Map String (Set.Set String) -> [[String]
 part1PathsFrom "end" pathSoFar _ = ["end" : pathSoFar]
 part1PathsFrom cave pathSoFar caveMap
   | isSmall cave && cave `elem` pathSoFar = []
-  | otherwise = concatMap (\x -> part1PathsFrom x (cave : pathSoFar) caveMap) (Set.toList $ caveMap Map.! cave)
+  | otherwise = concatMap (\x -> part1PathsFrom x (cave : pathSoFar) caveMap) (caveMap Map.! cave)
 
 hasSmallCaveDupe :: [String] -> Bool
 hasSmallCaveDupe path = any ((>1) . length) $ group $ sort $ filter isSmall path
@@ -51,7 +51,7 @@ part2PathsFrom :: String -> [String] -> Map String (Set.Set String) -> [[String]
 part2PathsFrom "end" pathSoFar _ = ["end" : pathSoFar]
 part2PathsFrom cave pathSoFar caveMap
   | isSmall cave && cave `elem` pathSoFar && hasSmallCaveDupe pathSoFar = []
-  | otherwise = concatMap (\x -> part2PathsFrom x (cave : pathSoFar) caveMap) (Set.toList $ caveMap Map.! cave)
+  | otherwise = concatMap (\x -> part2PathsFrom x (cave : pathSoFar) caveMap) (caveMap Map.! cave)
 
 doPart2 :: [Char] -> Int
 doPart2 input =
