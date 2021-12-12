@@ -58,5 +58,5 @@ doPart2 input =
   let segments = map parseSegment $ lines input
       caveMap = buildCaveMap segments
       restOfCaveMap = Map.insert "start" Set.empty caveMap
-      paths = concatMap (\x -> part2PathsFrom x ["start"] restOfCaveMap) (caveMap Map.! "start") -- TODO works?
+      paths = concatMap (\x -> part2PathsFrom x ["start"] restOfCaveMap) (caveMap Map.! "start")
   in length paths
