@@ -4,7 +4,7 @@ module Day12
       doPart1
     ) where
 
-import Data.Char (toUpper)
+import Data.Char (isUpper)
 import Data.List (group, sort)
 import Data.List.Split (splitOn)
 import Data.Map (Map)
@@ -36,7 +36,7 @@ addOneDirection :: String -> String -> Map String (Set.Set String) -> Map String
 addOneDirection from to = Map.insertWith Set.union from (Set.singleton to)
 
 isBig :: String -> Bool
-isBig cave = cave == map toUpper cave
+isBig = any isUpper
 
 part1PathsFrom :: String -> [String] -> Map String (Set.Set String) -> [[String]]
 part1PathsFrom "end" pathSoFar _ = ["end" : pathSoFar]
