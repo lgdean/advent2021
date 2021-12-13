@@ -11,7 +11,6 @@ import qualified Data.Map.Strict as Map
 import Debug.Trace (trace)
 
 
--- mercifully there are no big-to-big connections in the input; this simplifies the search.
 doPart1 :: Int -> [Char] -> Int
 doPart1 x input =
   let dots = map parsePoint $ lines input :: [(Int, Int)]
