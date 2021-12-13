@@ -3,6 +3,7 @@ module Day13
 --      doPart2,
       foldLeft,
       foldUp,
+      readPaper,
       doPart1Left,
       doPart1Up
     ) where
@@ -14,10 +15,15 @@ import qualified Data.Map.Strict as Map
 import Debug.Trace (trace)
 
 
-doPart1Left :: Int -> [Char] -> Int
-doPart1Left x input =
+readPaper :: [Char] -> Map (Int, Int) Bool
+readPaper input =
   let dots = map parsePoint $ lines input :: [(Int, Int)]
       paper = foldl (\m p -> Map.insert p True m) Map.empty dots :: Map (Int, Int) Bool
+  in paper
+
+doPart1Left :: Int -> [Char] -> Int
+doPart1Left x input =
+  let paper = readPaper input
       folded = foldLeft x paper
   in Map.size folded
 
