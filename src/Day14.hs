@@ -46,7 +46,3 @@ alternate :: [a] -> [a] -> [a]
 alternate (a:as) (b:bs) = a:b:alternate as bs
 alternate [] bs = bs
 alternate as [] = as
-
-insertElement :: Maybe Char -> String -> String
-insertElement (Just x) (a:bs) = a:x:bs
-insertElement Nothing xs = xs
