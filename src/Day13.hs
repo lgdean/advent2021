@@ -59,16 +59,14 @@ parsePoint line =
 
 foldUp :: Int -> Map (Int, Int) Bool -> Map (Int, Int) Bool
 foldUp y paper =
-  -- assuming the easy case: bottom height always <= top height; no dots on the fold line
-  let (top, bottom) = Map.partitionWithKey (\(a,b) _ -> b < y) paper
+  let (top, bottom) = Map.partitionWithKey (\(_,b) _ -> b < y) paper
       flippedBottom = Map.mapKeys (\(a,b) -> (a, 2*y-b)) bottom
       overlapped = Map.union top flippedBottom
   in overlapped
 
 foldLeft :: Int -> Map (Int, Int) Bool -> Map (Int, Int) Bool
 foldLeft x paper =
-  -- assuming the easy case: bottom height always <= top height; no dots on the fold line
-  let (top, bottom) = Map.partitionWithKey (\(a,_) _ -> a < x) paper
-      flippedBottom = Map.mapKeys (\(a,b) -> (2*x-a, b)) bottom
-      overlapped = Map.union top flippedBottom
+  let (left, right) = Map.partitionWithKey (\(a,_) _ -> a < x) paper
+      flippedPart = Map.mapKeys (\(a,b) -> (2*x-a, b)) right
+      overlapped = Map.union left flippedPart
   in overlapped
