@@ -1,6 +1,6 @@
 module Day13
     (
---      doPart2,
+      doPart2,
       foldLeft,
       foldUp,
       readPaper,
@@ -14,6 +14,24 @@ import qualified Data.Map.Strict as Map
 
 import Debug.Trace (trace)
 
+
+doPart2 :: [Map (Int, Int) Bool -> Map (Int, Int) Bool] -> [Char] -> Int
+doPart2 folds input =
+  let paper = readPaper input
+      allFolded = foldl (\p f -> f p) paper folds
+  in trace (showGrid allFolded) $ Map.size allFolded
+
+showGrid :: Map.Map (Int, Int) Bool -> String
+showGrid grid =
+  let ((minX, minY), _) = Map.findMin grid
+      ((maxX, maxY), _) = Map.findMax grid
+      showRow r = [showDot $ Map.lookup (x,r) grid | x <- [minX..maxX]] ++ "\n"
+      rows = [showRow y | y <- [minY..maxY]]
+  in concat rows
+
+showDot :: Maybe Bool -> Char
+showDot (Just True) = '#'
+showDot _ = ' '
 
 readPaper :: [Char] -> Map (Int, Int) Bool
 readPaper input =
