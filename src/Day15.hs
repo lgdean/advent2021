@@ -7,7 +7,7 @@ module Day15
 import Data.Char (digitToInt, intToDigit)
 import Data.Map (Map)
 import qualified Data.Map.Strict as Map
-import Data.Maybe (catMaybes, fromJust)
+import Data.Maybe (catMaybes, fromJust, maybeToList)
 
 import Debug.Trace (trace)
 
@@ -39,8 +39,7 @@ exploreFromEnd :: Int -> Map.Map (Int, Int) Int -> Map.Map (Int, Int) (Maybe Int
 exploreFromEnd (-1) _ lowestSoFar = lowestSoFar
 exploreFromEnd d risks lowestSoFar =
   let newGeneration = Map.filterWithKey (\(x,y) _ -> x+y == d) risks
-      neighbors p = Map.filterWithKey (\k _ -> isNeighbor p k) lowestSoFar
-      newRisk (p, ownRisk) = fancyMin (map (maybePlus ownRisk) (Map.elems (neighbors p)))
+      newRisk (p, ownRisk) = fancyMin (map (maybePlus ownRisk) (neighbors p lowestSoFar))
   in exploreFromEnd (d-1) risks $ Map.union (Map.mapWithKey (curry newRisk) newGeneration) lowestSoFar
 
 -- would be good to remember how to use Maybe monad
@@ -58,6 +57,14 @@ isNeighbor (x1, y1) (x2, y2) =
   abs diffX == 1 && diffY == 0 || diffX == 0 && abs diffY == 1
   where diffX = x1-x2
         diffY = y1-y2
+
+neighbors :: (Int, Int) -> Map.Map (Int, Int) a -> [a]
+neighbors (x,y) grid =
+  let coords = neighborCoords (x,y)
+  in concatMap (\c -> maybeToList (Map.lookup c grid)) coords
+
+neighborCoords :: (Int, Int) -> [(Int, Int)]
+neighborCoords (x,y) = [ (x+a,y+b) | a <- [-1,0,1], b <- [-1,0,1], (a==0) /= (b==0) ]
 
 showGrid :: Map.Map (Int, Int) Int -> String
 showGrid grid =
