@@ -28,9 +28,13 @@ doPart1 input =
 
 improvePaths :: Map.Map (Int, Int) Int -> Map.Map (Int, Int) Int -> Map.Map (Int, Int) Int
 improvePaths risks lowestSoFar =
-  let neighbors p = Map.filterWithKey (\k _ -> isNeighbor p k) lowestSoFar
-      newRisk (p, ownRisk) = minimum (lowestSoFar Map.! p : map (+ ownRisk) (Map.elems (neighbors p)))
-  in Map.mapWithKey (curry newRisk) risks
+  let shiftedRight = Map.mapKeys (\(x,y) -> (x+1,y)) lowestSoFar
+      shiftedLeft = Map.mapKeys (\(x,y) -> (x-1,y)) lowestSoFar
+      shiftedUp = Map.mapKeys (\(x,y) -> (x,y-1)) lowestSoFar
+      shiftedDown = Map.mapKeys (\(x,y) -> (x,y+1)) lowestSoFar
+      allShifts = map (Map.intersectionWith (+) risks) [shiftedRight, shiftedLeft, shiftedUp, shiftedDown]
+      newLowest = Map.unionsWith min (lowestSoFar : allShifts)
+  in newLowest
 
 exploreFromEnd :: Int -> Map.Map (Int, Int) Int -> Map.Map (Int, Int) (Maybe Int) -> Map.Map (Int, Int) (Maybe Int)
 exploreFromEnd (-1) _ lowestSoFar = lowestSoFar
