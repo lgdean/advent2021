@@ -5,7 +5,6 @@ module Day15
     ) where
 
 import Data.Char (digitToInt, intToDigit)
-import Data.List.Split (splitOn)
 import Data.Map (Map)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (catMaybes, fromJust)
@@ -44,12 +43,6 @@ exploreFromEnd d risks lowestSoFar =
       newRisk (p, ownRisk) = fancyMin (map (maybePlus ownRisk) (Map.elems (neighbors p)))
   in exploreFromEnd (d-1) risks $ Map.union (Map.mapWithKey (curry newRisk) newGeneration) lowestSoFar
 
---exploreFromEnd :: Map.Map (Int, Int) Int -> Map.Map (Int, Int) (Maybe Int) -> Map.Map (Int, Int) (Maybe Int)
---exploreFromEnd risks lowestSoFar =
---  let neighbors p = Map.filterWithKey (\k _ -> isNeighbor p k) lowestSoFar
---      newRisk (p, ownRisk) = fancyMin (lowestSoFar Map.! p : map (maybePlus ownRisk) (Map.elems (neighbors p)))
---  in Map.mapWithKey (curry newRisk) risks
-
 -- would be good to remember how to use Maybe monad
 fancyMin :: [Maybe Int] -> Maybe Int
 fancyMin xs =
@@ -60,13 +53,6 @@ fancyMin xs =
 maybePlus :: Int -> Maybe Int -> Maybe Int
 maybePlus a (Just b) = Just (a+b)
 maybePlus _ Nothing = Nothing
-
-lowestTotalRiskTo :: (Int, Int) -> (Int, Int) -> Map.Map (Int, Int) Int -> Int
-lowestTotalRiskTo dest@(destX, destY) src@(srcX, srcY) grid
-  | dest == src = 0
-  | isNeighbor dest src = grid Map.! dest
-  | otherwise = minimum $ map (\(p,r) -> r + lowestTotalRiskTo p src grid) (neighbors dest)
-  where neighbors p = Map.toList $ Map.filterWithKey (\k _ -> isNeighbor p k) grid
 
 isNeighbor (x1, y1) (x2, y2) =
   abs diffX == 1 && diffY == 0 || diffX == 0 && abs diffY == 1
