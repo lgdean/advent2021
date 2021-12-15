@@ -25,7 +25,7 @@ doPart1 input =
 --  in trace (show endState) $ fromJust (endState Map.! (0,0)) - riskGrid Map.! (0,0)
 --  in fromJust (endState Map.! destination)
 
-improvePaths :: Map.Map (Int, Int) Int -> Map.Map (Int, Int) Int -> Map.Map (Int, Int) Int
+improvePaths :: Map (Int, Int) Int -> Map (Int, Int) Int -> Map (Int, Int) Int
 improvePaths risks lowestSoFar =
   let shiftedRight = Map.mapKeys (\(x,y) -> (x+1,y)) lowestSoFar
       shiftedLeft = Map.mapKeys (\(x,y) -> (x-1,y)) lowestSoFar
@@ -35,7 +35,7 @@ improvePaths risks lowestSoFar =
       newLowest = Map.unionsWith min (lowestSoFar : allShifts)
   in trace "hello" newLowest
 
-exploreFromEnd :: Int -> Map.Map (Int, Int) Int -> Map.Map (Int, Int) (Maybe Int) -> Map.Map (Int, Int) (Maybe Int)
+exploreFromEnd :: Int -> Map (Int, Int) Int -> Map (Int, Int) (Maybe Int) -> Map (Int, Int) (Maybe Int)
 exploreFromEnd (-1) _ lowestSoFar = lowestSoFar
 exploreFromEnd d risks lowestSoFar =
   let newGeneration = Map.filterWithKey (\(x,y) _ -> x+y == d) risks
@@ -58,7 +58,7 @@ isNeighbor (x1, y1) (x2, y2) =
   where diffX = x1-x2
         diffY = y1-y2
 
-neighbors :: (Int, Int) -> Map.Map (Int, Int) a -> [a]
+neighbors :: (Int, Int) -> Map (Int, Int) a -> [a]
 neighbors (x,y) grid =
   let coords = neighborCoords (x,y)
   in concatMap (\c -> maybeToList (Map.lookup c grid)) coords
@@ -66,7 +66,7 @@ neighbors (x,y) grid =
 neighborCoords :: (Int, Int) -> [(Int, Int)]
 neighborCoords (x,y) = [ (x+a,y+b) | a <- [-1,0,1], b <- [-1,0,1], (a==0) /= (b==0) ]
 
-showGrid :: Map.Map (Int, Int) Int -> String
+showGrid :: Map (Int, Int) Int -> String
 showGrid grid =
   let ((minX, minY), _) = Map.findMin grid
       ((maxX, maxY), _) = Map.findMax grid
@@ -74,12 +74,12 @@ showGrid grid =
       rows = [showRow y | y <- [minY..maxY]]
   in concat rows
 
-parseGrid :: String -> Map.Map (Int, Int) Int
+parseGrid :: String -> Map (Int, Int) Int
 parseGrid input =
   let rows = lines input
   in Map.unions $ zipWith parseRow [0..] rows
 
-parseRow :: Int -> String -> Map.Map (Int, Int) Int
+parseRow :: Int -> String -> Map (Int, Int) Int
 parseRow n row =
   let coords = zip [0..] (repeat n)
   in Map.fromList $ zip coords (map digitToInt row)
