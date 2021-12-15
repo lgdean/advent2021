@@ -22,7 +22,7 @@ doPart1 input =
 --      endState = fixedPoint (exploreFromEnd riskGrid) $ Map.insert destination (Just destRisk) $ Map.map (const Nothing) riskGrid
       diagState = exploreFromEnd (maxX+maxY-1) riskGrid $ Map.insert destination (Just destRisk) Map.empty
       endState = fixedPoint (improvePaths riskGrid) $ Map.map fromJust diagState
-  in trace (show endState) $ endState Map.! (0,0) - riskGrid Map.! (0,0)
+  in endState Map.! (0,0) - riskGrid Map.! (0,0)
 --  in trace (show endState) $ fromJust (endState Map.! (0,0)) - riskGrid Map.! (0,0)
 --  in fromJust (endState Map.! destination)
 
