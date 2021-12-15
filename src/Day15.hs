@@ -1,6 +1,6 @@
 module Day15
     (
---      doPart2,
+      doPart2,
       doPart1
     ) where
 
@@ -34,7 +34,7 @@ improvePaths risks lowestSoFar =
       shiftedDown = Map.mapKeys (\(x,y) -> (x,y+1)) lowestSoFar
       allShifts = map (Map.intersectionWith (+) risks) [shiftedRight, shiftedLeft, shiftedUp, shiftedDown]
       newLowest = Map.unionsWith min (lowestSoFar : allShifts)
-  in newLowest
+  in trace "hello" newLowest
 
 exploreFromEnd :: Int -> Map.Map (Int, Int) Int -> Map.Map (Int, Int) (Maybe Int) -> Map.Map (Int, Int) (Maybe Int)
 exploreFromEnd (-1) _ lowestSoFar = lowestSoFar
@@ -90,3 +90,20 @@ parseRow :: Int -> String -> Map.Map (Int, Int) Int
 parseRow n row =
   let coords = zip [0..] (repeat n)
   in Map.fromList $ zip coords (map digitToInt row)
+
+
+doPart2 :: [Char] -> Int
+doPart2 input =
+  let partialGrid = parseGrid input
+      (tileSize@(tileX,tileY),_) = Map.findMax partialGrid
+      copyRight tile = Map.union tile $ Map.mapKeys (\(x,y) -> (x+tileX+1,y)) $ Map.map incrementRisk tile
+      copyDown tile = Map.union tile $ Map.mapKeys (\(x,y) -> (x,y+tileY+1)) $ Map.map incrementRisk tile
+      fullWidth = iterate copyRight partialGrid !! 4
+      riskGrid = iterate copyDown fullWidth !! 4
+      (destination@(maxX,maxY),destRisk) = Map.findMax riskGrid
+      diagState = exploreFromEnd (maxX+maxY-1) riskGrid $ Map.insert destination (Just destRisk) Map.empty
+      endState = fixedPoint (improvePaths riskGrid) $ Map.map fromJust diagState
+  in endState Map.! (0,0) - riskGrid Map.! (0,0)
+
+incrementRisk 9 = 1
+incrementRisk n = n + 1

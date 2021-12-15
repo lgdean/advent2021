@@ -14,13 +14,15 @@ spec = do
 
     it "can solve Part 1" $ do
       input <- readFile "day15-input"
+      pending
       doPart1 input `shouldBe` 621
 
---  describe "Part 2" $ do
---    it "can handle given example" $ do
---      input <- readFile "day15-example-input"
---      doPart2 "NNCB" input `shouldBe` 0
---
---    it "can solve Part 2" $ do
---      input <- readFile "day15-input"
---      doPart2 "SVCHKVFKCSHVFNBKKPOC" input `shouldBe` 0
+  describe "Part 2" $ do
+    it "can handle given example" $ do
+      input <- readFile "day15-example-input"
+      doPart2 input `shouldBe` 315
+
+    it "can solve Part 2" $ do
+      input <- readFile "day15-input"
+      pending
+      doPart2 input `shouldBe` 0
