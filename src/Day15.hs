@@ -21,7 +21,10 @@ doPart1 input =
 --      endState = fixedPoint (exploreFromEnd riskGrid) $ Map.insert destination (Just destRisk) $ Map.map (const Nothing) riskGrid
       diagState = exploreFromEnd (maxX+maxY-1) riskGrid $ Map.insert destination (Just destRisk) Map.empty
       endState = fixedPoint (improvePaths riskGrid) $ Map.map fromJust diagState
-  in endState Map.! (0,0) - riskGrid Map.! (0,0)
+      diagStateAsList = gridMapToList $ Map.map fromJust diagState
+      endStateAsList = fixedPoint (improvePathsList $ gridMapToList riskGrid) diagStateAsList
+  in head (head endStateAsList) - riskGrid Map.! (0,0)
+--  in endState Map.! (0,0) - riskGrid Map.! (0,0)
 --  in trace (show endState) $ fromJust (endState Map.! (0,0)) - riskGrid Map.! (0,0)
 --  in fromJust (endState Map.! destination)
 
@@ -34,6 +37,16 @@ improvePaths risks lowestSoFar =
       allShifts = map (Map.intersectionWith (+) risks) [shiftedRight, shiftedLeft, shiftedUp, shiftedDown]
       newLowest = Map.unionsWith min (lowestSoFar : allShifts)
   in trace "hello" newLowest
+
+improvePathsList :: [[Int]] -> [[Int]] -> [[Int]]
+improvePathsList risks lowestSoFar =
+  let neighbors1 = zipWith (zipWith (+)) risks (repeat 5000000 : lowestSoFar) :: [[Int]]
+      neighbors2 = zipWith (zipWith (+)) risks (tail lowestSoFar ++ [repeat 5000000])
+      neighbors3 = zipWith (zipWith (+)) risks (map (5000000 :) lowestSoFar)
+      neighbors4 = zipWith (zipWith (+)) risks (map (\l -> tail l ++ [5000000]) lowestSoFar)
+      lowestFromNeighbors = foldl (zipWith (zipWith min)) (repeat (repeat 5000000)) [neighbors1, neighbors2, neighbors3, neighbors4] :: [[Int]]
+      newLowest = zipWith (zipWith min) lowestSoFar lowestFromNeighbors
+  in trace "hello from list" newLowest
 
 exploreFromEnd :: Int -> Map (Int, Int) Int -> Map (Int, Int) (Maybe Int) -> Map (Int, Int) (Maybe Int)
 exploreFromEnd (-1) _ lowestSoFar = lowestSoFar
@@ -66,6 +79,15 @@ neighbors (x,y) grid =
 neighborCoords :: (Int, Int) -> [(Int, Int)]
 neighborCoords (x,y) = [ (x+a,y+b) | a <- [-1,0,1], b <- [-1,0,1], (a==0) /= (b==0) ]
 
+gridMapToList :: Map (Int, Int) Int -> [[Int]]
+gridMapToList grid =
+  -- there is a better way, but this code was right here
+  let ((minX, minY), _) = Map.findMin grid
+      ((maxX, maxY), _) = Map.findMax grid
+      showRow r = [grid Map.! (x,r) | x <- [minX..maxX]]
+      rows = [showRow y | y <- [minY..maxY]]
+  in rows
+
 showGrid :: Map (Int, Int) Int -> String
 showGrid grid =
   let ((minX, minY), _) = Map.findMin grid
@@ -96,7 +118,10 @@ doPart2 input =
       (destination@(maxX,maxY),destRisk) = Map.findMax riskGrid
       diagState = exploreFromEnd (maxX+maxY-1) riskGrid $ Map.insert destination (Just destRisk) Map.empty
       endState = fixedPoint (improvePaths riskGrid) $ Map.map fromJust diagState
-  in endState Map.! (0,0) - riskGrid Map.! (0,0)
+      diagStateAsList = gridMapToList $ Map.map fromJust diagState
+      endStateAsList = fixedPoint (improvePathsList $ gridMapToList riskGrid) diagStateAsList
+  in head (head endStateAsList) - riskGrid Map.! (0,0)
+--  in endState Map.! (0,0) - riskGrid Map.! (0,0)
 
 incrementRisk 9 = 1
 incrementRisk n = n + 1
