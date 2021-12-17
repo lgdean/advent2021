@@ -1,6 +1,6 @@
 module Day17
     (
---      doPart2,
+      doPart2,
       doPart1
     ) where
 
@@ -8,6 +8,15 @@ import Data.Range
 
 import Debug.Trace (trace)
 
+
+doPart2 :: Range Int -> Range Int -> Int
+doPart2 xtarget ytarget =
+  let plausibleDX = takeWhile (not . aboveRange xtarget) [1..]
+      plausibleDY = [-117..118]
+      infinitePath (x,y) (dx,dy) = map fst $ iterate (uncurry doStep) ((x,y),(dx,dy)) :: [(Int, Int)]
+      pathOf (x,y) (dx,dy) = takeWhile (not . pastTarget xtarget ytarget) $ infinitePath (x,y) (dx,dy)
+      allGoodPaths = filter (any (inTarget xtarget ytarget)) [pathOf (0,0) (dx,dy) | dx <- plausibleDX, dy <- plausibleDY]
+  in length allGoodPaths
 
 doPart1 :: Range Int -> Range Int -> Int
 doPart1 xtarget ytarget =
