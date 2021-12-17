@@ -3,17 +3,17 @@ module Day17Spec where
 
 import Test.Hspec
 
+import Data.Range
+
 import Day17
 
 spec :: Spec
 spec = do
   describe "Part 1" $ do
     it "can handle given example" $ do
-      input <- readFile "day17-example-input"
       pending
-      doPart1 input `shouldBe` 0
+      doPart1 (20 +=+ 30) ((-10) +=+ (-5)) `shouldBe` 45
 
     it "can solve Part 1" $ do
-      input <- readFile "day17-input"
       pending
-      doPart1 input `shouldBe` 0
+      doPart1 (155 +=+ 182) ((-117) +=+ (-67)) `shouldBe` 0
