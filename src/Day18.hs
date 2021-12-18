@@ -9,6 +9,7 @@ import Debug.Trace (trace)
 
 import Lib
 
+data SnailfishNum = Regular Int | Pair SnailfishNum SnailfishNum
 
 doPart1 :: [Char] -> Int
 doPart1 input =
