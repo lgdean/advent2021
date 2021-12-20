@@ -19,12 +19,6 @@ doPart1 inputs =
       (x,y,z) = head $ head scannerResults
   in x+y+z
 
-parseBeacon :: String -> (Int, Int, Int)
-parseBeacon line =
-  case splitOn "," line of
-    [x,y,z] -> (read x, read y, read z)
-    _       -> error $ "cannot parse: " ++ line
-
 findOverlap :: [(Int, Int, Int)] -> [(Int, Int, Int)] -> ([(Int, Int, Int)], (Int, Int, Int))
 findOverlap ref other =
   let rotatedOther = map (`map` other) rotations
@@ -71,3 +65,9 @@ findOverlapParsing scanner0 scanner1 =
       beacons1 = map parseBeacon $ lines scanner1
       (overlap, _) = findOverlap beacons0 beacons1
   in overlap
+
+parseBeacon :: String -> (Int, Int, Int)
+parseBeacon line =
+  case splitOn "," line of
+    [x,y,z] -> (read x, read y, read z)
+    _       -> error $ "cannot parse: " ++ line
