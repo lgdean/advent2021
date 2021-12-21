@@ -40,20 +40,11 @@ doPart1test inputs =
 
 buildBeaconMap :: Set (Int, Int, Int) -> [(Int, Int, Int)] -> Map Int [(Int, Int, Int)] -> (Set (Int, Int, Int), Map Int [(Int, Int, Int)])
 buildBeaconMap soFar curr scanners
-  | Map.null scanners = (soFar, scanners)
   | otherwise = let overlaps = Map.filter (not . null . fst) $ Map.map (findOverlap curr) scanners
-             in case Map.size overlaps of
-               0 -> (soFar, scanners)
-               1 -> buildBeaconMap (Set.union soFar $ Set.fromList rotated) rotated nextRest
-                    where overlapKey = head $ Map.keys overlaps
-                          (overlap, rotated) = overlaps Map.! overlapKey
-                          nextRest = Map.delete overlapKey scanners
-               _ -> Map.foldlWithKey
+                in Map.foldlWithKey
                           (\(sa, ma) k b -> buildBeaconMap (Set.union sa $ Set.fromList b) b (Map.delete k ma))
                           (soFar, scanners)
                           (Map.map snd overlaps)
---                      _ -> error "oh heck"
---               n -> error "oh no, shortcut did not work"
 
 findOverlap :: [(Int, Int, Int)] -> [(Int, Int, Int)] -> ([(Int, Int, Int)], [(Int, Int, Int)])
 findOverlap ref other =
