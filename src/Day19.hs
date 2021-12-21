@@ -48,10 +48,10 @@ buildBeaconMap soFar curr scanners
                     where overlapKey = head $ Map.keys overlaps
                           (overlap, rotated) = overlaps Map.! overlapKey
                           nextRest = Map.delete overlapKey scanners
-               _ -> let results = Map.mapWithKey(\k (o,r) -> buildBeaconMap (Set.fromList r) r (Map.delete k scanners)) overlaps
-                        (rotatedSets, remainingMaps) = unzip $ Map.elems results
-                        remainingScanners = foldl Map.intersection scanners remainingMaps
-                    in (Set.unions (soFar : rotatedSets), remainingScanners)
+               _ -> Map.foldlWithKey
+                          (\(sa, ma) k b -> buildBeaconMap (Set.union sa $ Set.fromList b) b (Map.delete k ma))
+                          (soFar, scanners)
+                          (Map.map snd overlaps)
 --                      _ -> error "oh heck"
 --               n -> error "oh no, shortcut did not work"
 
