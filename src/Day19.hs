@@ -41,7 +41,7 @@ doPart1test inputs =
 buildBeaconMap :: Set (Int, Int, Int) -> [(Int, Int, Int)] -> Map Int [(Int, Int, Int)] -> (Set (Int, Int, Int), Map Int [(Int, Int, Int)])
 buildBeaconMap soFar curr scanners
   | Map.null scanners = (soFar, scanners)
-  | otherwise = let overlaps = Map.filter ((>= 12) . length . fst) $ Map.map (findOverlap curr) scanners
+  | otherwise = let overlaps = Map.filter (not . null . fst) $ Map.map (findOverlap curr) scanners
              in case Map.size overlaps of
                0 -> (soFar, scanners)
                1 -> buildBeaconMap (Set.union soFar $ Set.fromList rotated) rotated nextRest
@@ -60,16 +60,19 @@ findOverlap ref other =
   let rotatedOther = map (`map` other) rotations
       overlaps = map (maxOverlap ref) rotatedOther
       overlapsAndAdjustedOther = zipWith (\(ovlp, offset) rotated -> (ovlp, map (`distance3d` offset) rotated)) overlaps rotatedOther
-  in maximumBy (comparing (length . fst)) overlapsAndAdjustedOther -- TODO if needed can find only first >= 12
+      usefulOverlaps = filter (not . null . fst) overlapsAndAdjustedOther
+  in case usefulOverlaps of
+    [] -> ([], [])
+    (answer:_) -> answer
 
 maxOverlap :: [(Int, Int, Int)] -> [(Int, Int, Int)] -> ([(Int, Int, Int)], (Int, Int, Int))
 maxOverlap ref other =
   let diffsFromRef = concat [map (`distance3d` r) other | r <- ref] :: [(Int, Int, Int)]
       overlaps = map (\d -> (overlapUsing d ref other, d)) diffsFromRef
-      mostInCommon = maximumBy (comparing (length . fst)) overlaps
-      -- TODO why isn't this filter just an optimization? hm.
---      mostInCommon = maximumBy (comparing (length . fst)) $ filter ((>=12) . length . fst) overlaps
-  in mostInCommon
+      mostInCommon = filter ((>=12) . length . fst) overlaps
+  in case mostInCommon of
+    [] -> ([], (0,0,0))
+    (answer:_) -> answer
 
 overlapUsing :: (Int, Int, Int) -> [(Int, Int, Int)] -> [(Int, Int, Int)] -> [(Int, Int, Int)]
 overlapUsing diff refs others =
